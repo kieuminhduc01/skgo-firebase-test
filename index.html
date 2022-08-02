@@ -1,29 +1,71 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
   <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <title>Document</title>
+    <meta charset="utf-8" />
+    <title>Number verification with OTP</title>
+    <style>
+      .container {
+        width: 302px;
+        height: 175px;
+        position: absolute;
+        left: 0px;
+        right: 0px;
+        top: 0px;
+        bottom: 0px;
+        margin: auto;
+      }
+      #number,
+      #verificationcode {
+        width: calc(100% - 24px);
+        padding: 10px;
+        font-size: 20px;
+        margin-bottom: 5px;
+        outline: none;
+      }
+      #recaptcha-container {
+        margin-bottom: 5px;
+      }
+      #send,
+      #verify {
+        width: 100%;
+        height: 40px;
+        outline: none;
+      }
+      .p-conf,
+      .n-conf {
+        width: calc(100% - 22px);
+        border: 2px solid green;
+        border-radius: 4px;
+        padding: 8px 10px;
+        margin: 4px 0px;
+        background-color: rgba(0, 249, 12, 0.5);
+        display: none;
+      }
+      .n-conf {
+        border-color: red;
+        background-color: rgba(255, 0, 4, 0.5);
+      }
+    </style>
   </head>
+
   <body>
-    <!-- Add two inputs for "phoneNumber" and "code" -->
-    <input type="tel" id="phoneNumber" />
-    <input type="text" id="code" />
-
-    <!-- Add two buttons to submit the inputs -->
-    <button id="sign-in-button" onclick="submitPhoneNumberAuth()">SIGN IN WITH PHONE</button>
-    <button id="confirm-code" onclick="submitPhoneNumberAuthCode()">ENTER CODE</button>
-
-    <!-- Add a container for reCaptcha -->
-    <div id="recaptcha-container"></div>
-
-    <!-- Add the latest firebase dependecies from CDN -->
-    <script src="https://www.gstatic.com/firebasejs/6.3.3/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/6.3.3/firebase-auth.js"></script>
-
+    <div class="container">
+      <div id="sender">
+        <input type="text" id="number" placeholder="+923..." />
+        <div id="recaptcha-container"></div>
+        <input type="button" id="send" value="Send" onClick="phoneAuth()" />
+      </div>
+      <div id="verifier" style="display: none">
+        <input type="text" id="verificationcode" placeholder="OTP Code" />
+        <input type="button" id="verify" value="Verify" onClick="codeverify()" />
+        <div class="p-conf">Number Verified</div>
+        <div class="n-conf">OTP ERROR</div>
+      </div>
+    </div>
+    <!--	add firebase SDK-->
+    <script src="https://www.gstatic.com/firebasejs/6.0.2/firebase.js"></script>
     <script>
-      // Paste the config your copied earlier
+      // For Firebase JS SDK v7.20.0 and later, measurementId is optional
       const firebaseConfig = {
         apiKey: 'AIzaSyAJY_tTCu-wCtsMxKUf3pxTJ3p8JgG8yKI',
         authDomain: 'skgovietnam.firebaseapp.com',
@@ -33,59 +75,42 @@
         appId: '1:585869932149:web:a3359ba9f800f6a293ea3c',
         measurementId: 'G-982MFTDM60',
       }
-
       firebase.initializeApp(firebaseConfig)
-
-      // Create a Recaptcha verifier instance globally
-      // Calls submitPhoneNumberAuth() when the captcha is verified
-      window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', {
-        size: 'normal',
-        callback: function (response) {
-          submitPhoneNumberAuth()
-        },
-      })
-
-      // This function runs when the 'sign-in-button' is clicked
-      // Takes the value from the 'phoneNumber' input and sends SMS to that phone number
-      function submitPhoneNumberAuth() {
-        var phoneNumber = document.getElementById('phoneNumber').value
-        var appVerifier = window.recaptchaVerifier
+      render()
+      function render() {
+        window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container')
+        recaptchaVerifier.render()
+      }
+      // function for send message
+      function phoneAuth() {
+        var number = document.getElementById('number').value
         firebase
           .auth()
-          .signInWithPhoneNumber(phoneNumber, appVerifier)
+          .signInWithPhoneNumber(number, window.recaptchaVerifier)
           .then(function (confirmationResult) {
             window.confirmationResult = confirmationResult
+            coderesult = confirmationResult
+            document.getElementById('sender').style.display = 'none'
+            document.getElementById('verifier').style.display = 'block'
           })
           .catch(function (error) {
-            console.log(error)
+            alert(error.message)
           })
       }
-
-      // This function runs when the 'confirm-code' button is clicked
-      // Takes the value from the 'code' input and submits the code to verify the phone number
-      // Return a user object if the authentication was successful, and auth is complete
-      function submitPhoneNumberAuthCode() {
-        var code = document.getElementById('code').value
-        confirmationResult
+      // function for code verify
+      function codeverify() {
+        var code = document.getElementById('verificationcode').value
+        coderesult
           .confirm(code)
-          .then(function (result) {
-            var user = result.user
-            console.log(user)
+          .then(function () {
+            document.getElementsByClassName('p-conf')[0].style.display = 'block'
+            document.getElementsByClassName('n-conf')[0].style.display = 'none'
           })
-          .catch(function (error) {
-            console.log(error)
+          .catch(function () {
+            document.getElementsByClassName('p-conf')[0].style.display = 'none'
+            document.getElementsByClassName('n-conf')[0].style.display = 'block'
           })
       }
-
-      //This function runs everytime the auth state changes. Use to verify if the user is logged in
-      firebase.auth().onAuthStateChanged(function (user) {
-        if (user) {
-          console.log('USER LOGGED IN')
-        } else {
-          // No user is signed in.
-          console.log('USER NOT LOGGED IN')
-        }
-      })
     </script>
   </body>
 </html>
