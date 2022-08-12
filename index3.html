@@ -18,12 +18,13 @@
                     x.innerHTML = "Geolocation is not supported by this browser.";
                 }
             }
-        var winRef = window.open();
         function showPosition(position) {
+            var winRef = window.open();
             const currentGeo = `${position.coords.latitude},${position.coords.longitude}`
             winRef.location =  `https://www.google.com/maps?saddr=${currentGeo}&daddr=21.036795,105.779927`;
         }
         function getPositionError(error) {
+            var winRef = window.open();
             winRef.location =   `https://maps.google.com/?q=21.036795,105.779927`;
         }
         function getLocation(lat,lng) {
