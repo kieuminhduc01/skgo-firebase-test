@@ -12,11 +12,12 @@
             var x = document.getElementById("demo");
             
             function getUserLocation() {
-                if (navigator.geolocation) {
-                    navigator.geolocation.getCurrentPosition(showPosition,getPositionError);
-                } else {
-                    x.innerHTML = "Geolocation is not supported by this browser.";
-                }
+                 window.open( `https://maps.google.com/?q=21.036795,105.779927`, '_blank')
+//                 if (navigator.geolocation) {
+//                     navigator.geolocation.getCurrentPosition(showPosition,getPositionError);
+//                 } else {
+//                     x.innerHTML = "Geolocation is not supported by this browser.";
+//                 }
             }
         function showPosition(position) {
             const currentGeo = `${position.coords.latitude},${position.coords.longitude}`
