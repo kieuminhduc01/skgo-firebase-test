@@ -13,30 +13,19 @@
             
             const getUserLocation = () => {
                  window.open( `https://maps.google.com/?q=21.036795,105.779927`, '_blank')
-//                 if (navigator.geolocation) {
-//                     navigator.geolocation.getCurrentPosition(showPosition,getPositionError);
-//                 } else {
-//                     x.innerHTML = "Geolocation is not supported by this browser.";
-//                 }
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(showPosition,getPositionError);
+                } else {
+                    x.innerHTML = "Geolocation is not supported by this browser.";
+                }
             }
         function showPosition(position) {
             const currentGeo = `${position.coords.latitude},${position.coords.longitude}`
             const link = `https://www.google.com/maps?saddr=${currentGeo}&daddr=21.036795,105.779927`;
-
-            const a = document.createElement("a");
-            a.setAttribute('href', link);
-            a.setAttribute('target', '_blank');
-            a.click();
-//             window.location.assign(`https://www.google.com/maps?saddr=${currentGeo}&daddr=21.036795,105.779927`);
+            window.location.assign(`https://www.google.com/maps?saddr=${currentGeo}&daddr=21.036795,105.779927`);
         }
         function getPositionError(error) {
-//             window.location.assign(`https://maps.google.com/?q=21.036795,105.779927`);
-            const link = `https://maps.google.com/?q=21.036795,105.779927`;
-
-            const a = document.createElement("a");
-            a.setAttribute('href', link);
-            a.setAttribute('target', '_blank');
-            a.click();
+            window.location.assign(`https://maps.google.com/?q=21.036795,105.779927`);
         }
         function getLocation(lat,lng) {
             x.innerHTML = "Lat: " +  lat+
