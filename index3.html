@@ -13,16 +13,21 @@
             
             function getUserLocation() {
                 if (navigator.geolocation) {
-                    navigator.geolocation.getCurrentPosition(showPosition);
+                    navigator.geolocation.getCurrentPosition(showPosition,getPositionError);
                 } else {
                     x.innerHTML = "Geolocation is not supported by this browser.";
                 }
             }
         
         function showPosition(position) {
-            getLocation(position.coords.latitude,position.coords.longitude);
+            const currentGeo = `${position.coords.latitude},${position.coords.longitude}`
+            window.open(
+                `https://www.google.com/maps?saddr=${currentGeo}&daddr=21.036795,105.779927`, "_blank");
         }
-        
+        function getPositionError(error) {
+            window.open(
+                `https://maps.google.com/?q=21.036795,105.779927`, "_blank");
+        }
         function getLocation(lat,lng) {
             x.innerHTML = "Lat: " +  lat+
             "<br>Lng: " + lng;
