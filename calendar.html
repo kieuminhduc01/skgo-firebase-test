@@ -45,6 +45,9 @@
   </body>
    <script>
       $(function () {
+        $("#myBtn").click(function(){
+          $("#myModal").modal();
+        });
         $('#datepicker').datepicker({
           dateFormat: 'dd-mm-yy',
           changeMonth: true,
@@ -82,5 +85,6 @@
           minDate: 0,
         })
       })
+});
     </script>
 </html>
