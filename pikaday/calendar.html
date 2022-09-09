@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>Page Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" type="text/css" media="screen" href="main.css" />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="https://cdn.jsdelivr.net/npm/pikaday/css/pikaday.css"
+    />
+  </head>
+  <body>
+    <input type="text" id="datepicker" />
+    <button id="today">Today</button>
+  </body>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+  <script src="pikaday.js"></script>
+  <script src="plugins/pikaday.jquery.js"></script>
+  <script>
+    var picker = new Pikaday({
+      field: $('#datepicker')[0],
+      format: 'DD/MM/YYYY',
+      toString(date, format) {
+        // you should do formatting based on the passed format,
+        // but we will just return 'D/M/YYYY' for simplicity
+        const day = date.getDate()
+        const month = date.getMonth() + 1
+        const year = date.getFullYear()
+        return `${day}/${month}/${year}`
+      },
+      parse(dateString, format) {
+        // dateString is the result of `toString` method
+        const parts = dateString.split('/')
+        const day = parseInt(parts[0], 10)
+        const month = parseInt(parts[1], 10) - 1
+        const year = parseInt(parts[2], 10)
+        return new Date(year, month, day)
+      },
+      i18n: {
+        previousMonth: 'Previous Month',
+        nextMonth: 'Next Month',
+        months: [
+          'Tháng 1',
+          'Tháng 2',
+          'Tháng 3',
+          'Tháng 4',
+          'Tháng 5',
+          'Tháng 6',
+          'Tháng 7',
+          'Tháng 8',
+          'Tháng 9',
+          'Tháng 10',
+          'Tháng 11',
+          'Tháng 12',
+        ],
+        weekdays: ['Chủ nhật', 'Thứ 2', 'Thứ 3', 'Thứ 4', 'Thứ 5', 'Thứ 6', 'Thứ 7'],
+        weekdaysShort: ['CN', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7'],
+      },
+      yearRange: [2021, 2022],
+      minDate: new Date(),
+      onSelect: function (date) {
+        const day = date.getDate()
+        const month = date.getMonth() + 1
+        const year = date.getFullYear()
+        console.log(`${year}/${month}/${day}`)
+      },
+    })
+    $('#today').click(() => {
+      picker.gotoToday()
+    })
+  </script>
+</html>
